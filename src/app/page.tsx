@@ -1,19 +1,29 @@
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { Suspense } from "react";
+"use client";
 
-import { getQueryClient, trpc } from "@/trpc/server";
+import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
 
-import Client from "./client";
+import { Button } from "@/components/ui/button";
+import { useTRPC } from "@/trpc/client";
 
-export default async function Home() {
-  const queryClient = getQueryClient();
-  void queryClient.prefetchQuery(trpc.hello.queryOptions({ text: "Kayque" }));
+export default function Home() {
+  const trpc = useTRPC();
+  const invoke = useMutation(
+    trpc.invoke.mutationOptions({
+      onSuccess: () => {
+        toast.success("Background job invoked");
+      },
+    }),
+  );
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Client />
-      </Suspense>
-    </HydrationBoundary>
+    <div className="mx-auto max-w-7xl py-4">
+      <Button
+        onClick={() => invoke.mutate({ text: "Kayque" })}
+        disabled={invoke.isPending}
+      >
+        Invoke background job
+      </Button>
+    </div>
   );
 }
