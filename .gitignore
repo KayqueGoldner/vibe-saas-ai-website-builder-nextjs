@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+/sandbox-templates/**/*.toml
 
 # debug
 npm-debug.log*
