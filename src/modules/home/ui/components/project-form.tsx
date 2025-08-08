@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { ArrowUpIcon, Loader2Icon } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { useClerk } from "@clerk/nextjs";
 
 import { cn } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client";
@@ -26,6 +27,7 @@ const formSchema = z.object({
 
 export const ProjectForm = () => {
   const router = useRouter();
+  const clerk = useClerk();
 
   const trpc = useTRPC();
   const queryClient = useQueryClient();
@@ -45,6 +47,11 @@ export const ProjectForm = () => {
       },
       onError: (error) => {
         toast.error(error.message);
+
+        if (error.data?.code === "UNAUTHORIZED") {
+          clerk.openSignIn();
+        }
+
         // TODO: redirect to pricing page if specific error
       },
     }),
