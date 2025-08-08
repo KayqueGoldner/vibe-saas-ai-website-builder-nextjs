@@ -64,7 +64,7 @@ export const ProjectView = ({ projectId }: ProjectViewProps) => {
                 </TabsTrigger>
               </TabsList>
               <div className="ml-auto flex items-center gap-x-2">
-                <Button size="sm" variant="default" asChild>
+                <Button size="sm" variant="tertiary" asChild>
                   <Link href="/pricing">
                     <CrownIcon /> Upgrade
                   </Link>
